@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerGuide - Your Personalized Education Advisor</title>
+    <title>COURSE2CAREER - Your Personalized Education Advisor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -142,7 +142,7 @@
                         <i class="fas fa-graduation-cap text-white text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">CareerGuide</h1>
+                        <h1 class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">COURSE2CAREER</h1>
                         <p class="text-sm text-gray-500 hidden md:block">Your Personalized Education Advisor</p>
                     </div>
                 </div>
@@ -491,6 +491,53 @@
                                 <span>You can review and change your answers before submitting</span>
                             </li>
                         </ul>
+                        <!-- Career Guidance Questions Section -->
+                        <div class="mt-10">
+                            <h4 class="text-xl font-bold text-primary mb-4 flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i>
+                                Career Guidance Questions
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="bg-white rounded-2xl p-6 shadow border border-gray-100">
+                                    <h5 class="text-lg font-bold text-indigo-700 mb-2">Class 10</h5>
+                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
+                                        <li>What are your favorite subjects in school?</li>
+                                        <li>Which activities or hobbies do you enjoy most outside of class?</li>
+                                        <li>Are you more interested in science, commerce, or arts subjects?</li>
+                                        <li>Which subjects do you feel most confident in, and which ones do you struggle with?</li>
+                                        <li>Do you enjoy solving math problems, writing stories, or doing creative projects?</li>
+                                        <li>Have you thought about what you want to study after Class 10?</li>
+                                        <li>Is there a career or profession you admire or want to know more about?</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white rounded-2xl p-6 shadow border border-gray-100">
+                                    <h5 class="text-lg font-bold text-indigo-700 mb-2">Class 12 (Science Stream)</h5>
+                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
+                                        <li>Which science subject do you enjoy most: Physics, Chemistry, Biology, Math, or Computer Science?</li>
+                                        <li>Are you interested in engineering, medicine, research, or technology fields?</li>
+                                        <li>Do you prefer practical experiments or theoretical learning?</li>
+                                        <li>Have you considered careers in pure sciences or interdisciplinary fields?</li>
+                                        <li>Are you preparing for any entrance exams (like JEE, NEET, etc.)?</li>
+                                    </ul>
+                                    <h5 class="text-lg font-bold text-indigo-700 mt-6 mb-2">Class 12 (Commerce Stream)</h5>
+                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
+                                        <li>Which commerce subject do you like best: Accountancy, Business Studies, Economics, or Mathematics?</li>
+                                        <li>Are you interested in finance, management, entrepreneurship, or law?</li>
+                                        <li>Do you enjoy analyzing business cases or solving numerical problems?</li>
+                                        <li>Have you thought about starting your own business or working in a corporate setting?</li>
+                                        <li>Are you considering professional courses like CA, CS, or BBA?</li>
+                                    </ul>
+                                    <h5 class="text-lg font-bold text-indigo-700 mt-6 mb-2">Class 12 (Arts/Humanities Stream)</h5>
+                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
+                                        <li>Which arts/humanities subject excites you: History, Political Science, Literature, Psychology, Sociology, or Fine Arts?</li>
+                                        <li>Are you interested in careers in media, design, public services, education, or social sciences?</li>
+                                        <li>Do you enjoy creative writing, debating, or artistic activities?</li>
+                                        <li>Have you participated in any social work, clubs, or competitions?</li>
+                                        <li>Are you considering further studies in liberal arts, law, or design?</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="space-y-8">
                         <!-- All questions displayed at once -->
@@ -1290,7 +1337,7 @@
                         <div class="w-14 h-14 bg-gradient-to-r from-primary to-indigo-600 rounded-2xl flex items-center justify-center">
                             <i class="fas fa-graduation-cap text-white text-2xl"></i>
                         </div>
-                        <h3 class="text-2xl font-bold">CareerGuide</h3>
+                        <h3 class="text-2xl font-bold">COURSE2CAREER</h3>
                     </div>
                     <p class="text-gray-400 text-lg mb-8">
                         Your one-stop personalized career and education advisor helping students make informed decisions for a brighter future.
@@ -1382,7 +1429,7 @@
             </div>
             <div class="border-t border-gray-800 mt-12 pt-8 text-center">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                    <p class="text-lg text-gray-400">&copy; 2024 CareerGuide. All rights reserved.</p>
+                <p class="text-lg text-gray-400">&copy; 2024 COURSE2CAREER. All rights reserved.</p>
                     <div class="flex space-x-8">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors text-lg hover:translate-x-1 transition-transform">Terms</a>
                         <a href="#" class="text-gray-400 hover:text-white transition-colors text-lg hover:translate-x-1 transition-transform">Privacy</a>
@@ -1549,6 +1596,7 @@
         ];
         // State
         let userAnswers = {};
+        let userProfile = {};
         // Initialize
         function init() {
             // Set up event listeners
@@ -1874,13 +1922,11 @@
                 science: 0,
                 commerce: 0
             };
-            // Count selections by category
             for (const answer of Object.values(userAnswers)) {
                 if (answer && answer.category) {
                     categoryCount[answer.category]++;
                 }
             }
-            // Find the category with the highest count
             let maxCategory = 'arts';
             let maxCount = categoryCount.arts;
             if (categoryCount.science > maxCount) {
@@ -1891,13 +1937,29 @@
                 maxCategory = 'commerce';
                 maxCount = categoryCount.commerce;
             }
-            // Log for debugging
-            console.log("Quiz Results Analysis:", categoryCount);
-            console.log("Recommended Category:", maxCategory);
-            // After 2 seconds, show courses with recommendation
-            setTimeout(() => {
+            // Show personalized summary before courses
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-indigo-100 mb-8';
+            let streamText = '';
+            if (maxCategory === 'arts') streamText = 'Arts/Humanities';
+            if (maxCategory === 'science') streamText = 'Science';
+            if (maxCategory === 'commerce') streamText = 'Commerce';
+            summaryDiv.innerHTML = `
+                <h3 class="text-2xl font-bold text-primary mb-4">Your Recommended Stream: <span class="text-indigo-700">${streamText}</span></h3>
+                <p class="text-gray-700 mb-4">Based on your answers, you show strong interest and aptitude in <b>${streamText}</b> subjects and careers.</p>
+                <ul class="list-disc ml-6 text-gray-700 mb-4">
+                    <li>Explore courses and careers in <b>${streamText}</b> below.</li>
+                    <li>Review the career guidance questions for your stream to reflect on your next steps.</li>
+                </ul>
+                <button id="continue-to-courses" class="bg-gradient-to-r from-primary to-secondary text-white py-3 px-8 rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl mt-4">Continue to Recommendations</button>
+            `;
+            quizCompleted.innerHTML = '';
+            quizCompleted.appendChild(summaryDiv);
+            document.getElementById('quiz-content').classList.add('hidden');
+            quizCompleted.classList.remove('hidden');
+            document.getElementById('continue-to-courses').onclick = function() {
                 showCoursesPage(maxCategory);
-            }, 2000);
+            };
         }
         // Toggle Career Outcomes
         function toggleCareerOutcomes() {
@@ -1944,4 +2006,5 @@
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
+</html>
 </html>
