@@ -468,79 +468,8 @@
                     <p id="progress-text" class="text-gray-500 mt-2">0/10 questions answered</p>
                 </div>
                 <div id="quiz-content" class="space-y-8 relative z-10 max-h-96 overflow-y-auto">
-                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-100">
-                        <h4 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">i</span>
-                            Quiz Instructions
-                        </h4>
-                        <ul class="space-y-4 text-gray-700">
-                            <li class="flex items-start p-3 bg-white rounded-xl shadow-sm border-l-4 border-primary">
-                                <span class="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center text-primary font-medium text-sm mr-3 mt-0.5">1</span>
-                                <span>Answer all 10 multiple-choice questions</span>
-                            </li>
-                            <li class="flex items-start p-3 bg-white rounded-xl shadow-sm border-l-4 border-purple-500">
-                                <span class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-medium text-sm mr-3 mt-0.5">2</span>
-                                <span>Answer honestly for the most accurate recommendations</span>
-                            </li>
-                            <li class="flex items-start p-3 bg-white rounded-xl shadow-sm border-l-4 border-pink-500">
-                                <span class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center text-pink-600 font-medium text-sm mr-3 mt-0.5">3</span>
-                                <span>There's no time limit - take your time to think</span>
-                            </li>
-                            <li class="flex items-start p-3 bg-white rounded-xl shadow-sm border-l-4 border-blue-500">
-                                <span class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-medium text-sm mr-3 mt-0.5">4</span>
-                                <span>You can review and change your answers before submitting</span>
-                            </li>
-                        </ul>
-                        <!-- Career Guidance Questions Section -->
-                        <div class="mt-10">
-                            <h4 class="text-xl font-bold text-primary mb-4 flex items-center">
-                                <i class="fas fa-lightbulb mr-2"></i>
-                                Career Guidance Questions
-                            </h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div class="bg-white rounded-2xl p-6 shadow border border-gray-100">
-                                    <h5 class="text-lg font-bold text-indigo-700 mb-2">Class 10</h5>
-                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
-                                        <li>What are your favorite subjects in school?</li>
-                                        <li>Which activities or hobbies do you enjoy most outside of class?</li>
-                                        <li>Are you more interested in science, commerce, or arts subjects?</li>
-                                        <li>Which subjects do you feel most confident in, and which ones do you struggle with?</li>
-                                        <li>Do you enjoy solving math problems, writing stories, or doing creative projects?</li>
-                                        <li>Have you thought about what you want to study after Class 10?</li>
-                                        <li>Is there a career or profession you admire or want to know more about?</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-white rounded-2xl p-6 shadow border border-gray-100">
-                                    <h5 class="text-lg font-bold text-indigo-700 mb-2">Class 12 (Science Stream)</h5>
-                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
-                                        <li>Which science subject do you enjoy most: Physics, Chemistry, Biology, Math, or Computer Science?</li>
-                                        <li>Are you interested in engineering, medicine, research, or technology fields?</li>
-                                        <li>Do you prefer practical experiments or theoretical learning?</li>
-                                        <li>Have you considered careers in pure sciences or interdisciplinary fields?</li>
-                                        <li>Are you preparing for any entrance exams (like JEE, NEET, etc.)?</li>
-                                    </ul>
-                                    <h5 class="text-lg font-bold text-indigo-700 mt-6 mb-2">Class 12 (Commerce Stream)</h5>
-                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
-                                        <li>Which commerce subject do you like best: Accountancy, Business Studies, Economics, or Mathematics?</li>
-                                        <li>Are you interested in finance, management, entrepreneurship, or law?</li>
-                                        <li>Do you enjoy analyzing business cases or solving numerical problems?</li>
-                                        <li>Have you thought about starting your own business or working in a corporate setting?</li>
-                                        <li>Are you considering professional courses like CA, CS, or BBA?</li>
-                                    </ul>
-                                    <h5 class="text-lg font-bold text-indigo-700 mt-6 mb-2">Class 12 (Arts/Humanities Stream)</h5>
-                                    <ul class="list-disc ml-6 text-gray-700 space-y-2">
-                                        <li>Which arts/humanities subject excites you: History, Political Science, Literature, Psychology, Sociology, or Fine Arts?</li>
-                                        <li>Are you interested in careers in media, design, public services, education, or social sciences?</li>
-                                        <li>Do you enjoy creative writing, debating, or artistic activities?</li>
-                                        <li>Have you participated in any social work, clubs, or competitions?</li>
-                                        <li>Are you considering further studies in liberal arts, law, or design?</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- All questions displayed at once -->
                     <div class="space-y-8">
-                        <!-- All questions displayed at once -->
                         <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
                             <div class="flex items-center mb-6">
                                 <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
@@ -1872,7 +1801,6 @@
         function updateProgress() {
             const totalQuestions = 10;
             let answeredQuestions = 0;
-            
             for (let i = 1; i <= totalQuestions; i++) {
                 const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
                 if (selectedOption) {
@@ -1883,7 +1811,6 @@
                     };
                 }
             }
-            
             const progressPercentage = (answeredQuestions / totalQuestions) * 100;
             progressBar.style.width = `${progressPercentage}%`;
             progressText.textContent = `${answeredQuestions}/${totalQuestions} questions answered`;
@@ -1893,7 +1820,6 @@
             // Check if all questions are answered
             const totalQuestions = 10;
             let allAnswered = true;
-            
             for (let i = 1; i <= totalQuestions; i++) {
                 const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
                 if (!selectedOption) {
@@ -1901,16 +1827,13 @@
                     break;
                 }
             }
-            
             if (!allAnswered) {
                 alert("Please answer all questions before submitting.");
                 return;
             }
-            
             // Show completion screen
             quizContent.classList.add('hidden');
             quizCompleted.classList.remove('hidden');
-            
             // Process results
             processQuizResults();
         }
@@ -2006,5 +1929,4 @@
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-</html>
 </html>
