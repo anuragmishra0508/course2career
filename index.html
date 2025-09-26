@@ -6,6 +6,7 @@
     <title>COURSE2CAREER - Your Personalized Education Advisor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -20,6 +21,7 @@
                 }
             }
         }
+        window.jsPDF = window.jspdf.jsPDF;
     </script>
     <style>
         @keyframes fadeIn {
@@ -186,23 +188,23 @@
             <!-- Mobile Navigation -->
             <div id="mobile-menu" class="mobile-menu md:hidden py-6 border-t border-gray-200">
                 <div class="flex flex-col space-y-4">
-                    <button class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 bg-gradient-to-r from-primary to-secondary text-white">
+                    <button id="mobile-nav-home" class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 bg-gradient-to-r from-primary to-secondary text-white">
                         <i class="fas fa-home"></i>
                         <span class="font-semibold">Home</span>
                     </button>
-                    <button class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-blue-50">
+                    <button id="mobile-nav-courses" class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-blue-50">
                         <i class="fas fa-book"></i>
                         <span class="font-semibold">Courses</span>
                     </button>
-                    <button class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-blue-50">
+                    <button id="mobile-nav-colleges" class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-blue-50">
                         <i class="fas fa-building"></i>
                         <span class="font-semibold">Colleges</span>
                     </button>
-                    <button class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-blue-50">
+                    <button id="mobile-nav-resources" class="nav-link-mobile flex items-center space-x-4 px-6 py-4 rounded-2xl font-medium transition-all duration-300 text-gray-700 hover:bg-blue-50">
                         <i class="fas fa-book-open"></i>
                         <span class="font-semibold">Resources</span>
                     </button>
-                    <button class="flex items-center space-x-4 px-6 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-2xl font-bold hover:from-pink-600 hover:to-rose-600 transition-all duration-300">
+                    <button id="mobile-new-assessment" class="flex items-center space-x-4 px-6 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-2xl font-bold hover:from-pink-600 hover:to-rose-600 transition-all duration-300">
                         <i class="fas fa-sync-alt"></i>
                         <span>New Assessment</span>
                     </button>
@@ -421,7 +423,6 @@
                                 <option value="">Select your education level</option>
                                 <option value="class10">Class 10</option>
                                 <option value="class12">Class 12</option>
-                                <!-- Removed Graduate option as requested -->
                             </select>
                             <p id="education-error" class="text-red-500 text-sm mt-1 hidden">Please select your education level</p>
                         </div>
@@ -433,7 +434,6 @@
                                 <option value="science">Science</option>
                                 <option value="commerce">Commerce</option>
                                 <option value="arts">Arts</option>
-                                <option value="vocational">Vocational</option>
                             </select>
                             <p id="stream-error" class="text-red-500 text-sm mt-1 hidden">Please select your 12th standard stream</p>
                             <p class="text-sm text-gray-500 mt-2">This helps us provide more accurate career recommendations based on your academic background.</p>
@@ -448,7 +448,7 @@
                 </form>
             </div>
         </div>
-        <!-- Quiz Page (All questions on one page) -->
+        <!-- Quiz Page -->
         <div id="quiz-page" class="hidden animate-fadeIn">
             <div class="bg-white rounded-3xl shadow-2xl p-8 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full -translate-y-32 translate-x-32 opacity-20 animate-pulse"></div>
@@ -468,572 +468,127 @@
                     <p id="progress-text" class="text-gray-500 mt-2">0/10 questions answered</p>
                 </div>
                 <div id="quiz-content" class="space-y-8 relative z-10 max-h-96 overflow-y-auto">
-                    <!-- All questions displayed at once -->
-                    <div class="space-y-8">
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    1
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">Which activity do you enjoy the most?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question1" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="reading" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Reading books or writing stories</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question1" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="math" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Solving math problems or puzzles</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question1" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="tech" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Working with computers or technology</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question1" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="helping" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Helping others or working in teams</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    2
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">What type of problems do you like solving?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question2" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="creative" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Creative and open-ended problems</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question2" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="logical" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Logical and analytical problems</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question2" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="technical" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Technical and hands-on problems</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question2" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="people" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Problems involving people and communication</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    3
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">Which subjects did you enjoy most in school?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question3" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="history" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">History, Literature, Languages</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question3" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="science" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Physics, Chemistry, Biology</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question3" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="math" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Mathematics, Economics</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question3" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="social" data-category="arts">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Sociology, Psychology, Political Science</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    4
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">What kind of work environment appeals to you?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question4" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="creative" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Creative studio or research lab</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question4" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="structured" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Structured office with clear processes</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question4" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="dynamic" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Dynamic startup or tech company</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question4" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="academic" data-category="arts">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Academic or educational setting</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    5
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">What are your long-term career goals?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question5" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="impact" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Making a social or cultural impact</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question5" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="innovation" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Innovating and creating new technologies</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question5" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="financial" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Achieving financial success and stability</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question5" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="leadership" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Leadership and management positions</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    6
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">Which skills do you consider your strongest?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question6" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="communication" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Communication and writing skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question6" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="analytical" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Analytical and problem-solving skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question6" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="numerical" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Numerical and financial skills</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question6" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="interpersonal" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Interpersonal and teamwork skills</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    7
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">How do you prefer to learn new things?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question7" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="reading" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Reading books and articles</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question7" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="experimenting" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Experimenting and hands-on practice</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question7" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="structured" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Structured courses and tutorials</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question7" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="discussing" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Discussing with others and group learning</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    8
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">What motivates you the most?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question8" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="passion" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Following your passion and interests</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question8" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="challenge" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Solving complex challenges</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question8" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="success" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Achieving measurable success</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question8" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="recognition" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Recognition and status</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    9
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">Which type of projects excite you?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question9" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="creative" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Creative writing or art projects</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question9" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="technical" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Technical or scientific projects</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question9" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="business" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Business or financial projects</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question9" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="social" data-category="arts">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Social or community projects</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
-                            <div class="flex items-center mb-6">
-                                <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    10
-                                </div>
-                                <h5 class="text-xl font-bold text-gray-900">What kind of impact do you want to make?</h5>
-                            </div>
-                            <div class="space-y-4">
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question10" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="cultural" data-category="arts" required>
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Cultural or artistic impact</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question10" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="scientific" data-category="science">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Scientific or technological impact</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question10" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="economic" data-category="commerce">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Economic or business impact</span>
-                                </label>
-                                <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
-                                    <input type="radio" name="question10" class="h-5 w-5 text-primary focus:ring-primary mr-4 transform group-hover:scale-110 transition-transform" value="educational" data-category="arts">
-                                    <span class="text-gray-700 text-lg group-hover:text-primary transition-colors">Educational or social impact</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pt-6">
-                        <button id="submit-quiz" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 px-8 rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-3">
-                            <span>Submit Quiz & Get Recommendations</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
+                    <!-- Questions dynamically inserted -->
                 </div>
                 <div id="quiz-completed" class="hidden text-center py-16 relative z-10">
-                    <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
-                        <i class="fas fa-check-circle text-green-600 text-4xl"></i>
-                    </div>
-                    <h3 class="text-3xl font-bold text-gray-900 mb-4">Quiz Completed!</h3>
-                    <p class="text-gray-600 text-xl mb-8">Analyzing your responses to provide personalized recommendations...</p>
-                    <div class="w-64 h-2 bg-gray-200 rounded-full mx-auto overflow-hidden">
-                        <div class="h-full bg-gradient-to-r from-primary to-secondary animate-pulse"></div>
-                    </div>
-                    <div class="mt-8 flex justify-center space-x-2">
-                        <div class="w-3 h-3 bg-primary rounded-full animate-bounce"></div>
-                        <div class="w-3 h-3 bg-primary rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                        <div class="w-3 h-3 bg-primary rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
-                    </div>
+                    <!-- Results will be inserted here -->
                 </div>
             </div>
         </div>
-        <!-- Recommended Courses Page -->
-        <div id="courses-page" class="hidden animate-fadeIn">
+        <!-- Recommended Courses Page (After Quiz) -->
+        <div id="recommended-courses-page" class="hidden animate-fadeIn">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Recommended Courses for You</h2>
+                    <p class="text-xl text-gray-600">Based on your interests and 12th stream</p>
+                </div>
+                <button id="back-to-quiz-results" class="back-button">
+                    <i class="fas fa-arrow-left text-gray-700"></i>
+                </button>
+            </div>
+            <div id="recommended-courses-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+        <!-- All Courses Page (From Navigation) -->
+        <div id="all-courses-page" class="hidden animate-fadeIn">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">All Courses</h2>
+                    <p class="text-xl text-gray-600">Explore undergraduate programs by stream</p>
+                </div>
+                <button id="back-to-home-from-all-courses" class="back-button">
+                    <i class="fas fa-arrow-left text-gray-700"></i>
+                </button>
+            </div>
             <div class="space-y-10">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Recommended Courses for You</h2>
-                        <p class="text-xl text-gray-600">Based on your interests and strengths, we've selected these programs that match your profile</p>
-                    </div>
-                    <button id="back-to-quiz" class="back-button">
-                        <i class="fas fa-arrow-left text-gray-700"></i>
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div id="course-arts" class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetails(1)">
-                        <div class="relative overflow-hidden">
-                            <div class="top-recommendation-badge hidden">Top Recommendation</div>
-                            <img src="https://placehold.co/600x400/4F46E5/FFFFFF?text=B.A.+Program" alt="B.A. Program" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-6 right-6">
-                                <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-purple-500 to-pink-600">
-                                    Arts
-                                </span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                        <div class="p-8">
-                            <h4 class="text-2xl font-bold text-gray-900 mb-4">Bachelor of Arts (B.A.)</h4>
-                            <p class="text-gray-600 mb-6 text-lg leading-relaxed">Explore human culture, society, and expression through literature, history, philosophy, and languages.</p>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Career Paths:</h5>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Civil Services</span>
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Journalism</span>
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Teaching</span>
-                                    <span class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium">
-                                        +3 more
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mb-6">
-                                <span class="text-lg text-gray-500 font-medium">Duration: 3 Years</span>
-                                <span class="text-lg font-bold text-green-600">Colleges: 4</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-100">
-                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
-                                    View Course Details
+                <div>
+                    <h3 class="text-2xl font-bold text-green-600 mb-4">Science & Technology</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('BCA')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">BCA (Computer Applications)</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Programming, Databases, Web Tech</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    <div id="course-science" class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetails(2)">
-                        <div class="relative overflow-hidden">
-                            <div class="top-recommendation-badge hidden">Top Recommendation</div>
-                            <img src="https://placehold.co/600x400/059669/FFFFFF?text=B.Sc.+Program" alt="B.Sc. Program" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-6 right-6">
-                                <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-green-500 to-emerald-600">
-                                    Science
-                                </span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                        <div class="p-8">
-                            <h4 class="text-2xl font-bold text-gray-900 mb-4">Bachelor of Science (B.Sc.)</h4>
-                            <p class="text-gray-600 mb-6 text-lg leading-relaxed">Develop scientific knowledge and research skills in physics, chemistry, biology, mathematics, or computer science.</p>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Career Paths:</h5>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Research Scientist</span>
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Lab Technician</span>
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Data Analyst</span>
-                                    <span class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium">
-                                        +3 more
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mb-6">
-                                <span class="text-lg text-gray-500 font-medium">Duration: 3 Years</span>
-                                <span class="text-lg font-bold text-green-600">Colleges: 4</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-100">
-                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
-                                    View Course Details
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('B.Sc Computer Science')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">B.Sc Computer Science</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Algorithms, AI, Theory</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    <div id="course-commerce" class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetails(3)">
-                        <div class="relative overflow-hidden">
-                            <div class="top-recommendation-badge hidden">Top Recommendation</div>
-                            <img src="https://placehold.co/600x400/DC2626/FFFFFF?text=B.Com.+Program" alt="B.Com. Program" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-6 right-6">
-                                <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-orange-500 to-red-600">
-                                    Commerce
-                                </span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                        <div class="p-8">
-                            <h4 class="text-2xl font-bold text-gray-900 mb-4">Bachelor of Commerce (B.Com.)</h4>
-                            <p class="text-gray-600 mb-6 text-lg leading-relaxed">Master the principles of accounting, finance, business management, and economics for corporate and entrepreneurial careers.</p>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Career Paths:</h5>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Chartered Accountant</span>
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Business Analyst</span>
-                                    <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Banking Professional</span>
-                                    <span class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium">
-                                        +3 more
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mb-6">
-                                <span class="text-lg text-gray-500 font-medium">Duration: 3 Years</span>
-                                <span class="text-lg font-bold text-green-600">Colleges: 4</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-100">
-                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
-                                    View Course Details
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('B.Sc Medical')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">B.Sc Medical (Botany/Zoology)</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Life Sciences, Biology</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- CTA Section -->
-                <div class="bg-gradient-to-r from-primary to-secondary rounded-3xl p-12 text-center text-white">
-                    <h3 class="text-3xl font-bold mb-4">Need More Guidance?</h3>
-                    <p class="text-xl mb-8 opacity-90">Our career counselors are here to help you make the best decision for your future.</p>
-                    <button class="bg-white text-primary px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all shadow-xl">
-                        Book a Free Counseling Session
-                    </button>
+                <div>
+                    <h3 class="text-2xl font-bold text-orange-600 mb-4">Commerce & Management</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('B.Com (Hons)')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">B.Com (Hons)</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Accounting, Taxation, Finance</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('BBA')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">BBA</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Business, Marketing, HR</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-purple-600 mb-4">Arts & Humanities</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('B.A. Psychology')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">B.A. Psychology</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Human Behavior, Mental Health</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCourseDetail('B.A. Journalism')">
+                            <div class="p-8">
+                                <h4 class="text-2xl font-bold text-gray-900 mb-4">B.A. Journalism & Mass Comm</h4>
+                                <p class="text-gray-600 mb-6">3 Years | Media, Writing, Communication</p>
+                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Course Details Page -->
-        <div id="course-details-page" class="hidden animate-fadeIn">
-            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-700 hover:shadow-3xl">
-                <div class="relative">
-                    <img id="course-image" src="https://placehold.co/1200x400/4F46E5/FFFFFF?text=B.A.+Program" alt="Course" class="w-full h-80 object-cover">
-                    <div class="absolute top-8 left-8">
-                        <span id="course-stream" class="px-6 py-3 rounded-full text-lg font-bold text-white bg-gradient-to-r from-purple-500 to-pink-600">
-                            Arts
-                        </span>
-                    </div>
-                    <button id="back-to-courses" class="back-button">
-                        <i class="fas fa-arrow-left text-gray-700"></i>
-                    </button>
-                </div>
-                <div class="p-10">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-10">
-                        <div class="max-w-3xl">
-                            <h2 id="course-name" class="text-4xl font-bold text-gray-900 mb-4">Bachelor of Arts (B.A.)</h2>
-                            <p id="course-description" class="text-gray-600 text-xl mb-6 leading-relaxed">Explore human culture, society, and expression through literature, history, philosophy, and languages.</p>
-                            <div class="flex flex-wrap items-center gap-6 text-lg text-gray-500">
-                                <span class="flex items-center">
-                                    <i class="far fa-clock mr-2"></i>
-                                    Duration: <span id="course-duration">3 Years</span>
-                                </span>
-                                <span class="flex items-center">
-                                    <i class="fas fa-university mr-2"></i>
-                                    Colleges: <span id="course-colleges">4</span>
-                                </span>
-                            </div>
-                        </div>
-                        <button id="toggle-career-outcomes" class="mt-6 lg:mt-0 bg-gradient-to-r from-primary to-indigo-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all font-bold text-lg transform hover:scale-105 shadow-xl flex items-center space-x-2">
-                            <span>Show Career Outcomes</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <div id="career-outcomes" class="hidden mb-10 p-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl border border-blue-100">
-                        <h3 class="text-3xl font-bold text-gray-900 mb-6">Career Paths After Bachelor of Arts (B.A.)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 card-hover">
-                                <div class="w-14 h-14 bg-gradient-to-r from-primary to-indigo-600 rounded-2xl flex items-center justify-center mb-5">
-                                    <i class="fas fa-user-tie text-white text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-gray-900 mb-3">Civil Services</h4>
-                                <p class="text-gray-600 text-lg">
-                                    Prepare for government jobs, UPSC, and State PSC exams with our guidance
-                                </p>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 card-hover">
-                                <div class="w-14 h-14 bg-gradient-to-r from-primary to-indigo-600 rounded-2xl flex items-center justify-center mb-5">
-                                    <i class="fas fa-newspaper text-white text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-gray-900 mb-3">Journalism</h4>
-                                <p class="text-gray-600 text-lg">
-                                    Explore private sector opportunities and corporate career paths
-                                </p>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 card-hover">
-                                <div class="w-14 h-14 bg-gradient-to-r from-primary to-indigo-600 rounded-2xl flex items-center justify-center mb-5">
-                                    <i class="fas fa-chalkboard-teacher text-white text-xl"></i>
-                                </div>
-                                <h4 class="text-xl font-bold text-gray-900 mb-3">Teaching</h4>
-                                <p class="text-gray-600 text-lg">
-                                    Discover higher education options and research positions in your field
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-10">
-                        <h3 class="text-3xl font-bold text-gray-900 mb-6">Government Colleges Offering This Course</h3>
-                        <div class="space-y-6">
-                            <div class="border-2 border-gray-200 rounded-3xl p-8 card-hover">
-                                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                                    <div class="mb-6 lg:mb-0">
-                                        <h4 class="text-2xl font-bold text-gray-900 mb-3">Government College, Shimla</h4>
-                                        <p class="text-gray-600 text-lg mb-4">Shimla, HP</p>
-                                        <div class="flex flex-wrap gap-3 mb-4">
-                                            <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-                                                Cutoff: 45%
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-wrap gap-2">
-                                            <span class="text-sm font-semibold text-gray-700 mb-2">Facilities:</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Library</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Hostel</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Wi-Fi</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Sports Complex</span>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all font-bold text-lg transform hover:scale-105 shadow-lg">
-                                            Check Admission
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-2 border-gray-200 rounded-3xl p-8 card-hover">
-                                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                                    <div class="mb-6 lg:mb-0">
-                                        <h4 class="text-2xl font-bold text-gray-900 mb-3">Government Degree College, Dharamshala</h4>
-                                        <p class="text-gray-600 text-lg mb-4">Dharamshala, HP</p>
-                                        <div class="flex flex-wrap gap-3 mb-4">
-                                            <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-                                                Cutoff: 40%
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-wrap gap-2">
-                                            <span class="text-sm font-semibold text-gray-700 mb-2">Facilities:</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Library</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Sports</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Computer Lab</span>
-                                            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">Cafeteria</span>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all font-bold text-lg transform hover:scale-105 shadow-lg">
-                                            Check Admission
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-8">
-                        <h3 class="text-3xl font-bold text-gray-900 mb-6">Important Dates & Reminders</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div class="bg-white p-6 rounded-2xl shadow-lg card-hover">
-                                <div class="text-sm text-gray-500 mb-2">Admission Start Date</div>
-                                <div class="text-2xl font-bold text-gray-900">June 15, 2024</div>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg card-hover">
-                                <div class="text-sm text-gray-500 mb-2">Last Date to Apply</div>
-                                <div class="text-2xl font-bold text-gray-900">July 31, 2024</div>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg card-hover">
-                                <div class="text-sm text-gray-500 mb-2">Scholarship Deadline</div>
-                                <div class="text-2xl font-bold text-gray-900">August 15, 2024</div>
-                            </div>
-                            <div class="bg-white p-6 rounded-2xl shadow-lg card-hover">
-                                <div class="text-sm text-gray-500 mb-2">Counseling Dates</div>
-                                <div class="text-2xl font-bold text-gray-900">August 20-30, 2024</div>
-                            </div>
-                        </div>
-                        <button class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-5 px-8 rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all font-bold text-xl transform hover:scale-105 shadow-2xl">
-                            Set Reminders for These Dates
-                        </button>
-                    </div>
-                </div>
+        <!-- Course Detail Page -->
+        <div id="course-detail-page" class="hidden animate-fadeIn">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <button id="back-to-all-courses" class="back-button">
+                    <i class="fas fa-arrow-left text-gray-700"></i>
+                </button>
+                <div id="course-detail-content" class="mt-12"></div>
             </div>
         </div>
         <!-- Resources Page -->
@@ -1104,147 +659,20 @@
                 </div>
             </div>
         </div>
-        <!-- Colleges Page -->
+        <!-- Colleges Page (Dynamic) -->
         <div id="colleges-page" class="hidden animate-fadeIn">
             <div class="space-y-10">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-4xl font-bold text-gray-900 mb-4">Government Colleges in Maharashtra</h2>
-                        <p class="text-xl text-gray-600">Explore top government colleges across Maharashtra with detailed information</p>
+                        <h2 id="colleges-heading" class="text-4xl font-bold text-gray-900 mb-4">Government Colleges in Jammu & Kashmir</h2>
+                        <p id="colleges-subheading" class="text-xl text-gray-600">Explore colleges based on your education level</p>
                     </div>
                     <button id="back-to-home-from-colleges" class="back-button">
                         <i class="fas fa-arrow-left text-gray-700"></i>
                     </button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCollegeDetails(1)">
-                        <div class="relative overflow-hidden">
-                            <img src="https://placehold.co/600x400/4F46E5/FFFFFF?text=Mumbai+College" alt="Government College" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-6 right-6">
-                                <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600">
-                                    Maharashtra
-                                </span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                        <div class="p-8">
-                            <h4 class="text-2xl font-bold text-gray-900 mb-2">Government College of Arts, Science and Commerce, Mumbai</h4>
-                            <p class="text-gray-600 mb-4 text-lg">Mumbai, Maharashtra</p>
-                            <p class="text-sm text-gray-500 mb-4">Established: 1964</p>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Courses Offered:</h5>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.A.</span>
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.Sc.</span>
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.Com.</span>
-                                </div>
-                            </div>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Facilities:</h5>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Library</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Hostel</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Wi-Fi</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">+2 more</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mb-6">
-                                <span class="text-lg text-gray-500 font-medium">Cutoff: 75%</span>
-                                <span class="text-lg font-bold text-green-600">Courses: 3</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-100">
-                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
-                                    View College Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCollegeDetails(2)">
-                        <div class="relative overflow-hidden">
-                            <img src="https://placehold.co/600x400/059669/FFFFFF?text=Aurangabad+Uni" alt="University" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-6 right-6">
-                                <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600">
-                                    Maharashtra
-                                </span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                        <div class="p-8">
-                            <h4 class="text-2xl font-bold text-gray-900 mb-2">Dr. Babasaheb Ambedkar Marathwada University, Aurangabad</h4>
-                            <p class="text-gray-600 mb-4 text-lg">Aurangabad, Maharashtra</p>
-                            <p class="text-sm text-gray-500 mb-4">Established: 1958</p>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Courses Offered:</h5>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.A.</span>
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.Sc.</span>
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.Com.</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">+1 more</span>
-                                </div>
-                            </div>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Facilities:</h5>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Central Library</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Hostels</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Wi-Fi Campus</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">+1 more</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mb-6">
-                                <span class="text-lg text-gray-500 font-medium">Cutoff: 65%</span>
-                                <span class="text-lg font-bold text-green-600">Courses: 4</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-100">
-                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
-                                    View College Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-3xl shadow-xl card-hover cursor-pointer" onclick="showCollegeDetails(3)">
-                        <div class="relative overflow-hidden">
-                            <img src="https://placehold.co/600x400/DC2626/FFFFFF?text=Kolhapur+Uni" alt="University" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-6 right-6">
-                                <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600">
-                                    Maharashtra
-                                </span>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                        <div class="p-8">
-                            <h4 class="text-2xl font-bold text-gray-900 mb-2">Shivaji University, Kolhapur</h4>
-                            <p class="text-gray-600 mb-4 text-lg">Kolhapur, Maharashtra</p>
-                            <p class="text-sm text-gray-500 mb-4">Established: 1962</p>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Courses Offered:</h5>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.A.</span>
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.Sc.</span>
-                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">B.Com.</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">+2 more</span>
-                                </div>
-                            </div>
-                            <div class="mb-6">
-                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Facilities:</h5>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Digital Library</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Hostels</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">Wi-Fi</span>
-                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">+1 more</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mb-6">
-                                <span class="text-lg text-gray-500 font-medium">Cutoff: 60%</span>
-                                <span class="text-lg font-bold text-green-600">Courses: 5</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-100">
-                                <button class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
-                                    View College Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div id="colleges-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Colleges dynamically inserted -->
                 </div>
                 <!-- CTA Section -->
                 <div class="bg-gradient-to-r from-primary to-secondary rounded-3xl p-12 text-center text-white">
@@ -1375,454 +803,728 @@
         const homePage = document.getElementById('home-page');
         const profilePage = document.getElementById('profile-page');
         const quizPage = document.getElementById('quiz-page');
-        const coursesPage = document.getElementById('courses-page');
-        const courseDetailsPage = document.getElementById('course-details-page');
+        const recommendedCoursesPage = document.getElementById('recommended-courses-page');
+        const allCoursesPage = document.getElementById('all-courses-page');
+        const courseDetailPage = document.getElementById('course-detail-page');
         const resourcesPage = document.getElementById('resources-page');
         const collegesPage = document.getElementById('colleges-page');
         const startAssessmentBtn = document.getElementById('start-assessment');
         const backToHomeBtn = document.getElementById('back-to-home');
         const backToProfileBtn = document.getElementById('back-to-profile');
-        const backToQuizBtn = document.getElementById('back-to-quiz');
-        const backToCoursesBtn = document.getElementById('back-to-courses');
+        const backToAllCoursesBtn = document.getElementById('back-to-all-courses');
+        const backToHomeFromAllCoursesBtn = document.getElementById('back-to-home-from-all-courses');
         const backToHomeFromResourcesBtn = document.getElementById('back-to-home-from-resources');
         const backToHomeFromCollegesBtn = document.getElementById('back-to-home-from-colleges');
+        const backToQuizResultsBtn = document.getElementById('back-to-quiz-results');
         const newAssessmentBtn = document.getElementById('new-assessment');
         const profileForm = document.getElementById('profile-form');
-        const submitQuizBtn = document.getElementById('submit-quiz');
-        const toggleCareerOutcomesBtn = document.getElementById('toggle-career-outcomes');
-        const careerOutcomes = document.getElementById('career-outcomes');
+        const quizContent = document.getElementById('quiz-content');
+        const quizCompleted = document.getElementById('quiz-completed');
+        const recommendedCoursesList = document.getElementById('recommended-courses-list');
+        const collegesGrid = document.getElementById('colleges-grid');
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        // Navigation Links
         const navHome = document.getElementById('nav-home');
         const navCourses = document.getElementById('nav-courses');
         const navColleges = document.getElementById('nav-colleges');
         const navResources = document.getElementById('nav-resources');
-        // Form Elements
+        const mobileNavHome = document.getElementById('mobile-nav-home');
+        const mobileNavCourses = document.getElementById('mobile-nav-courses');
+        const mobileNavColleges = document.getElementById('mobile-nav-colleges');
+        const mobileNavResources = document.getElementById('mobile-nav-resources');
+        const mobileNewAssessment = document.getElementById('mobile-new-assessment');
         const nameInput = document.getElementById('name');
         const ageInput = document.getElementById('age');
         const genderInput = document.getElementById('gender');
         const educationInput = document.getElementById('education');
         const streamContainer = document.getElementById('stream-container');
         const streamInput = document.getElementById('stream');
-        // Error Elements
         const nameError = document.getElementById('name-error');
         const ageError = document.getElementById('age-error');
         const genderError = document.getElementById('gender-error');
         const educationError = document.getElementById('education-error');
         const streamError = document.getElementById('stream-error');
-        // Quiz Elements
-        const quizContent = document.getElementById('quiz-content');
-        const quizCompleted = document.getElementById('quiz-completed');
-        // Course Recommendation Elements
-        const courseArts = document.getElementById('course-arts');
-        const courseScience = document.getElementById('course-science');
-        const courseCommerce = document.getElementById('course-commerce');
-        // Quiz Data Structure
-        const quizData = [
-            {
-                id: 1,
-                question: "Which activity do you enjoy the most?",
-                options: [
-                    { value: "reading", text: "Reading books or writing stories", category: "arts" },
-                    { value: "math", text: "Solving math problems or puzzles", category: "science" },
-                    { value: "tech", text: "Working with computers or technology", category: "commerce" },
-                    { value: "helping", text: "Helping others or working in teams", category: "commerce" }
+
+        // Course Data
+        const courseData = {
+            "BCA": {
+                stream: "science",
+                duration: "3 Years",
+                description: "A professional undergraduate program focused on computer applications, software development, and IT fundamentals.",
+                colleges: 12,
+                careerPaths: ["Software Developer", "Web Designer", "System Analyst", "IT Consultant"],
+                syllabus: ["Programming in C", "Data Structures", "DBMS", "Web Technologies", "Python", "Cloud Computing"]
+            },
+            "B.Sc Computer Science": {
+                stream: "science",
+                duration: "3 Years",
+                description: "Focuses on theoretical and practical aspects of computing, algorithms, and software systems.",
+                colleges: 8,
+                careerPaths: ["Data Scientist", "AI Engineer", "Researcher", "Cybersecurity Analyst"],
+                syllabus: ["Discrete Mathematics", "Operating Systems", "Machine Learning", "Computer Networks"]
+            },
+            "B.Sc Medical": {
+                stream: "science",
+                duration: "3 Years",
+                description: "Study of plant and animal life, ecosystems, and biological processes.",
+                colleges: 10,
+                careerPaths: ["Biologist", "Environmental Consultant", "Lab Technician", "Teacher"],
+                syllabus: ["Cell Biology", "Genetics", "Ecology", "Microbiology", "Evolution"]
+            },
+            "B.Com (Hons)": {
+                stream: "commerce",
+                duration: "3 Years",
+                description: "Advanced study in accounting, finance, taxation, and business law.",
+                colleges: 15,
+                careerPaths: ["Chartered Accountant", "Financial Analyst", "Tax Consultant", "Auditor"],
+                syllabus: ["Financial Accounting", "Corporate Law", "Income Tax", "Cost Accounting", "Business Economics"]
+            },
+            "BBA": {
+                stream: "commerce",
+                duration: "3 Years",
+                description: "Builds foundational knowledge in business management, marketing, and entrepreneurship.",
+                colleges: 14,
+                careerPaths: ["Marketing Manager", "HR Executive", "Business Analyst", "Startup Founder"],
+                syllabus: ["Principles of Management", "Marketing", "Finance", "Operations", "Business Communication"]
+            },
+            "B.A. Psychology": {
+                stream: "arts",
+                duration: "3 Years",
+                description: "Study of human behavior, mental processes, and therapeutic techniques.",
+                colleges: 7,
+                careerPaths: ["Counselor", "HR Specialist", "Researcher", "Clinical Psychologist (with further study)"],
+                syllabus: ["Cognitive Psychology", "Developmental Psychology", "Abnormal Psychology", "Statistics"]
+            },
+            "B.A. Journalism": {
+                stream: "arts",
+                duration: "3 Years",
+                description: "Trains students in media writing, reporting, digital content creation, and communication.",
+                colleges: 9,
+                careerPaths: ["Journalist", "Content Writer", "PR Specialist", "Social Media Manager"],
+                syllabus: ["Media Ethics", "Reporting", "Editing", "Digital Media", "Public Relations"]
+            }
+        };
+
+        // College Database
+        const collegeDatabase = {
+            junior: {
+                science: [
+                    { name: "Govt. Higher Secondary School, Srinagar", location: "Srinagar, J&K", subjects: ["Physics", "Chemistry", "Maths", "Biology"], cutoff: "75%", facilities: ["Science Lab", "Library", "Wi-Fi"] },
+                    { name: "Govt. Higher Secondary School, Jammu", location: "Jammu, J&K", subjects: ["Physics", "Chemistry", "Maths", "Computer Science"], cutoff: "70%", facilities: ["Lab", "Library", "Hostel"] }
+                ],
+                commerce: [
+                    { name: "Govt. Higher Secondary School for Commerce, Jammu", location: "Jammu, J&K", subjects: ["Accountancy", "Business Studies", "Economics", "Maths"], cutoff: "65%", facilities: ["Commerce Lab", "Library", "Wi-Fi"] }
+                ],
+                arts: [
+                    { name: "Govt. Higher Secondary School, Anantnag", location: "Anantnag, J&K", subjects: ["History", "Pol Science", "Geography", "Sociology"], cutoff: "60%", facilities: ["Library", "Debate Club", "Wi-Fi"] }
                 ]
             },
-            {
-                id: 2,
-                question: "What type of problems do you like solving?",
-                options: [
-                    { value: "creative", text: "Creative and open-ended problems", category: "arts" },
-                    { value: "logical", text: "Logical and analytical problems", category: "science" },
-                    { value: "technical", text: "Technical and hands-on problems", category: "commerce" },
-                    { value: "people", text: "Problems involving people and communication", category: "commerce" }
-                ]
-            },
-            {
-                id: 3,
-                question: "Which subjects did you enjoy most in school?",
-                options: [
-                    { value: "history", text: "History, Literature, Languages", category: "arts" },
-                    { value: "science", text: "Physics, Chemistry, Biology", category: "science" },
-                    { value: "math", text: "Mathematics, Economics", category: "commerce" },
-                    { value: "social", text: "Sociology, Psychology, Political Science", category: "arts" }
-                ]
-            },
-            {
-                id: 4,
-                question: "What kind of work environment appeals to you?",
-                options: [
-                    { value: "creative", text: "Creative studio or research lab", category: "arts" },
-                    { value: "structured", text: "Structured office with clear processes", category: "commerce" },
-                    { value: "dynamic", text: "Dynamic startup or tech company", category: "science" },
-                    { value: "academic", text: "Academic or educational setting", category: "arts" }
-                ]
-            },
-            {
-                id: 5,
-                question: "What are your long-term career goals?",
-                options: [
-                    { value: "impact", text: "Making a social or cultural impact", category: "arts" },
-                    { value: "innovation", text: "Innovating and creating new technologies", category: "science" },
-                    { value: "financial", text: "Achieving financial success and stability", category: "commerce" },
-                    { value: "leadership", text: "Leadership and management positions", category: "commerce" }
-                ]
-            },
-            {
-                id: 6,
-                question: "Which skills do you consider your strongest?",
-                options: [
-                    { value: "communication", text: "Communication and writing skills", category: "arts" },
-                    { value: "analytical", text: "Analytical and problem-solving skills", category: "science" },
-                    { value: "numerical", text: "Numerical and financial skills", category: "commerce" },
-                    { value: "interpersonal", text: "Interpersonal and teamwork skills", category: "commerce" }
-                ]
-            },
-            {
-                id: 7,
-                question: "How do you prefer to learn new things?",
-                options: [
-                    { value: "reading", text: "Reading books and articles", category: "arts" },
-                    { value: "experimenting", text: "Experimenting and hands-on practice", category: "science" },
-                    { value: "structured", text: "Structured courses and tutorials", category: "commerce" },
-                    { value: "discussing", text: "Discussing with others and group learning", category: "commerce" }
-                ]
-            },
-            {
-                id: 8,
-                question: "What motivates you the most?",
-                options: [
-                    { value: "passion", text: "Following your passion and interests", category: "arts" },
-                    { value: "challenge", text: "Solving complex challenges", category: "science" },
-                    { value: "success", text: "Achieving measurable success", category: "commerce" },
-                    { value: "recognition", text: "Recognition and status", category: "commerce" }
-                ]
-            },
-            {
-                id: 9,
-                question: "Which type of projects excite you?",
-                options: [
-                    { value: "creative", text: "Creative writing or art projects", category: "arts" },
-                    { value: "technical", text: "Technical or scientific projects", category: "science" },
-                    { value: "business", text: "Business or financial projects", category: "commerce" },
-                    { value: "social", text: "Social or community projects", category: "arts" }
-                ]
-            },
-            {
-                id: 10,
-                question: "What kind of impact do you want to make?",
-                options: [
-                    { value: "cultural", text: "Cultural or artistic impact", category: "arts" },
-                    { value: "scientific", text: "Scientific or technological impact", category: "science" },
-                    { value: "economic", text: "Economic or business impact", category: "commerce" },
-                    { value: "educational", text: "Educational or social impact", category: "arts" }
+            degree: {
+                science: [
+                    { name: "Sri Pratap College, Srinagar", location: "Srinagar, J&K", courses: ["B.Sc Physics", "B.Sc Chemistry", "B.Sc Computer Science", "BCA"], cutoff: "70%", facilities: ["Research Lab", "Library", "Hostel"] },
+                    { name: "Govt. Degree College, Baramulla", location: "Baramulla, J&K", courses: ["B.Sc Botany", "B.Sc Zoology", "B.Sc IT", "B.Sc Microbiology"], cutoff: "55%", facilities: ["Labs", "Library", "Sports"] }
+                ],
+                commerce: [
+                    { name: "Govt. College of Commerce, Jammu", location: "Jammu, J&K", courses: ["B.Com", "B.Com (Hons)", "BBA", "BMS", "BAF"], cutoff: "65%", facilities: ["Commerce Lab", "Library", "Placement Cell"] }
+                ],
+                arts: [
+                    { name: "Govt. Degree College, Srinagar", location: "Srinagar, J&K", courses: ["B.A. English", "B.A. History", "B.A. Political Science", "B.A. Psychology", "B.A. Journalism"], cutoff: "45%", facilities: ["Library", "Hostel", "Wi-Fi"] }
                 ]
             }
-        ];
+        };
+
+        // Quiz Questions
+        const quizQuestions = {
+            class10: [
+                { id: 1, question: "Which subjects did you enjoy most in Class 10?", options: [
+                    { value: "science", text: "Science, Maths", category: "science" },
+                    { value: "social", text: "History, Geography", category: "arts" },
+                    { value: "maths", text: "Maths, Economics", category: "commerce" }
+                ]},
+                { id: 2, question: "What do you want to study after 10th?", options: [
+                    { value: "science", text: "Science (PCM/PCB)", category: "science" },
+                    { value: "commerce", text: "Commerce", category: "commerce" },
+                    { value: "arts", text: "Arts/Humanities", category: "arts" }
+                ]},
+                { id: 3, question: "Which career interests you most?", options: [
+                    { value: "engineer", text: "Engineer / Doctor", category: "science" },
+                    { value: "ca", text: "CA / Business", category: "commerce" },
+                    { value: "writer", text: "Writer / Teacher", category: "arts" }
+                ]},
+                { id: 4, question: "How do you prefer to learn?", options: [
+                    { value: "experiments", text: "Through experiments and labs", category: "science" },
+                    { value: "numbers", text: "Working with numbers and data", category: "commerce" },
+                    { value: "reading", text: "Reading and discussions", category: "arts" }
+                ]},
+                { id: 5, question: "What are your strengths?", options: [
+                    { value: "logical", text: "Logical thinking", category: "science" },
+                    { value: "calculations", text: "Quick calculations", category: "commerce" },
+                    { value: "creative", text: "Creative writing", category: "arts" }
+                ]},
+                { id: 6, question: "Which activity do you enjoy?", options: [
+                    { value: "coding", text: "Coding or building things", category: "science" },
+                    { value: "budgeting", text: "Managing money or budgets", category: "commerce" },
+                    { value: "debating", text: "Debating or storytelling", category: "arts" }
+                ]},
+                { id: 7, question: "What motivates you?", options: [
+                    { value: "innovation", text: "Creating new things", category: "science" },
+                    { value: "success", text: "Financial success", category: "commerce" },
+                    { value: "impact", text: "Social impact", category: "arts" }
+                ]},
+                { id: 8, question: "Which environment suits you?", options: [
+                    { value: "lab", text: "Lab or workshop", category: "science" },
+                    { value: "office", text: "Corporate office", category: "commerce" },
+                    { value: "classroom", text: "Classroom or studio", category: "arts" }
+                ]},
+                { id: 9, question: "What's your dream job?", options: [
+                    { value: "scientist", text: "Scientist / Doctor", category: "science" },
+                    { value: "entrepreneur", text: "Entrepreneur / Banker", category: "commerce" },
+                    { value: "journalist", text: "Journalist / Historian", category: "arts" }
+                ]},
+                { id: 10, question: "How do you solve problems?", options: [
+                    { value: "analyze", text: "Analyze and experiment", category: "science" },
+                    { value: "plan", text: "Plan and calculate", category: "commerce" },
+                    { value: "discuss", text: "Discuss and reflect", category: "arts" }
+                ]}
+            ],
+            class12: [
+                { id: 1, question: "Which activity excites you the most?", options: [
+                    { value: "coding", text: "Building apps or websites", category: "science" },
+                    { value: "biology_lab", text: "Studying cells or human body", category: "science" },
+                    { value: "stock_market", text: "Tracking stock prices or budgets", category: "commerce" },
+                    { value: "writing_stories", text: "Writing stories or articles", category: "arts" }
+                ]},
+                { id: 2, question: "Which subject did you enjoy most in 12th?", options: [
+                    { value: "computer_science", text: "Computer Science / Informatics", category: "science" },
+                    { value: "physics_chem", text: "Physics & Chemistry", category: "science" },
+                    { value: "biology", text: "Biology / Biotechnology", category: "science" },
+                    { value: "accountancy", text: "Accountancy / Business Studies", category: "commerce" },
+                    { value: "economics", text: "Economics / Mathematics", category: "commerce" },
+                    { value: "history_lit", text: "History / Literature / Languages", category: "arts" },
+                    { value: "psychology_soc", text: "Psychology / Sociology / Pol Science", category: "arts" }
+                ]},
+                { id: 3, question: "What’s your dream career?", options: [
+                    { value: "software_dev", text: "Software Developer / Data Scientist", category: "science" },
+                    { value: "doctor", text: "Doctor / Medical Researcher", category: "science" },
+                    { value: "ca", text: "Chartered Accountant / Auditor", category: "commerce" },
+                    { value: "entrepreneur", text: "Startup Founder / Business Owner", category: "commerce" },
+                    { value: "journalist", text: "Journalist / Content Creator", category: "arts" },
+                    { value: "psychologist", text: "Psychologist / Counselor", category: "arts" },
+                    { value: "civil_servant", text: "IAS / Civil Servant", category: "arts" }
+                ]},
+                { id: 4, question: "Which tools do you prefer?", options: [
+                    { value: "laptop_code", text: "Laptop & coding software", category: "science" },
+                    { value: "microscope", text: "Microscope & lab equipment", category: "science" },
+                    { value: "calculator_excel", text: "Calculator & Excel sheets", category: "commerce" },
+                    { value: "pen_notebook", text: "Pen, notebook, and books", category: "arts" }
+                ]},
+                { id: 5, question: "Which college course sounds most interesting?", options: [
+                    { value: "bca", text: "BCA – Computer Applications", category: "science" },
+                    { value: "btech", text: "B.Tech – Engineering", category: "science" },
+                    { value: "bsc_medical", text: "B.Sc – Medical Sciences", category: "science" },
+                    { value: "bcom_hons", text: "B.Com (Hons) – Accounting", category: "commerce" },
+                    { value: "bba", text: "BBA – Business Management", category: "commerce" },
+                    { value: "ba_journalism", text: "B.A. – Journalism", category: "arts" },
+                    { value: "ba_psychology", text: "B.A. – Psychology", category: "arts" }
+                ]},
+                { id: 6, question: "How do you solve problems?", options: [
+                    { value: "logical_code", text: "Write code or use logic", category: "science" },
+                    { value: "experiment", text: "Run experiments or tests", category: "science" },
+                    { value: "analyze_data", text: "Analyze data or financial reports", category: "commerce" },
+                    { value: "discuss", text: "Discuss with people or reflect", category: "arts" }
+                ]},
+                { id: 7, question: "Which environment suits you?", options: [
+                    { value: "tech_office", text: "Tech company or startup", category: "science" },
+                    { value: "hospital_lab", text: "Hospital or research lab", category: "science" },
+                    { value: "corporate", text: "Corporate office or bank", category: "commerce" },
+                    { value: "classroom_media", text: "Classroom, studio, or NGO", category: "arts" }
+                ]},
+                { id: 8, question: "What motivates you?", options: [
+                    { value: "build_tech", text: "Creating new technology", category: "science" },
+                    { value: "help_patients", text: "Helping patients or society", category: "science" },
+                    { value: "earn_money", text: "Financial success & stability", category: "commerce" },
+                    { value: "express_creativity", text: "Expressing ideas or creativity", category: "arts" }
+                ]},
+                { id: 9, question: "Which skill do you want to master?", options: [
+                    { value: "programming", text: "Programming & AI", category: "science" },
+                    { value: "medical_knowledge", text: "Medical or biological knowledge", category: "science" },
+                    { value: "finance", text: "Finance, accounting, or marketing", category: "commerce" },
+                    { value: "communication", text: "Writing, speaking, or counseling", category: "arts" }
+                ]},
+                { id: 10, question: "After graduation, you’d prefer to:", options: [
+                    { value: "join_it", text: "Join an IT company or startup", category: "science" },
+                    { value: "do_msc", text: "Pursue M.Sc or research", category: "science" },
+                    { value: "become_ca", text: "Become CA or join finance", category: "commerce" },
+                    { value: "do_mba", text: "Do MBA after BBA/B.Com", category: "commerce" },
+                    { value: "do_ma", text: "Do M.A. or become a teacher", category: "arts" },
+                    { value: "prepare_upsc", text: "Prepare for UPSC or state exams", category: "arts" }
+                ]}
+            ]
+        };
+
         // State
         let userAnswers = {};
         let userProfile = {};
+        let userStream = null;
+        let currentRecommendedCourses = [];
+
         // Initialize
         function init() {
-            // Set up event listeners
+            // Navigation
+            navHome.addEventListener('click', showHomePage);
+            navCourses.addEventListener('click', showAllCoursesPage);
+            navColleges.addEventListener('click', () => showCollegesPage(userStream, userProfile?.education));
+            navResources.addEventListener('click', showResourcesPage);
+            mobileNavHome.addEventListener('click', () => { toggleMobileMenu(); showHomePage(); });
+            mobileNavCourses.addEventListener('click', () => { toggleMobileMenu(); showAllCoursesPage(); });
+            mobileNavColleges.addEventListener('click', () => { toggleMobileMenu(); showCollegesPage(userStream, userProfile?.education); });
+            mobileNavResources.addEventListener('click', () => { toggleMobileMenu(); showResourcesPage(); });
+            mobileNewAssessment.addEventListener('click', () => { toggleMobileMenu(); resetAssessment(); });
+
+            // Buttons
             startAssessmentBtn.addEventListener('click', showProfilePage);
             backToHomeBtn.addEventListener('click', showHomePage);
             backToProfileBtn.addEventListener('click', showProfilePage);
-            backToQuizBtn.addEventListener('click', showQuizPage);
-            backToCoursesBtn.addEventListener('click', showCoursesPage);
+            backToHomeFromAllCoursesBtn.addEventListener('click', showHomePage);
+            backToAllCoursesBtn.addEventListener('click', showAllCoursesPage);
             backToHomeFromResourcesBtn.addEventListener('click', showHomePage);
             backToHomeFromCollegesBtn.addEventListener('click', showHomePage);
+            backToQuizResultsBtn.addEventListener('click', showQuizResults);
             newAssessmentBtn.addEventListener('click', resetAssessment);
             profileForm.addEventListener('submit', handleProfileSubmit);
-            submitQuizBtn.addEventListener('click', submitQuiz);
-            toggleCareerOutcomesBtn.addEventListener('click', toggleCareerOutcomes);
             mobileMenuToggle.addEventListener('click', toggleMobileMenu);
-            // Show/hide stream selection based on education level
             educationInput.addEventListener('change', function() {
                 if (this.value === 'class12') {
                     streamContainer.classList.remove('hidden');
                 } else {
                     streamContainer.classList.add('hidden');
-                    streamInput.value = ''; // Reset stream selection
+                    streamInput.value = '';
                 }
             });
-            // Update progress when questions are answered
-            const allRadioButtons = document.querySelectorAll('input[type="radio"][name^="question"]');
-            allRadioButtons.forEach(radio => {
-                radio.addEventListener('change', updateProgress);
-            });
-            // Navigation
-            navHome.addEventListener('click', showHomePage);
-            navCourses.addEventListener('click', showCoursesPage);
-            navColleges.addEventListener('click', showCollegesPage);
-            navResources.addEventListener('click', showResourcesPage);
-            // Form validation
             nameInput.addEventListener('input', validateName);
             ageInput.addEventListener('input', validateAge);
             genderInput.addEventListener('change', validateGender);
             educationInput.addEventListener('change', validateEducation);
             streamInput.addEventListener('change', validateStream);
-            // Initialize mobile menu
-            mobileMenu.classList.remove('open');
-        }
-        // Show Home Page
-        function showHomePage() {
-            hideAllPages();
-            homePage.classList.remove('hidden');
-            setActiveNav('home');
-        }
-        // Show Profile Page
-        function showProfilePage() {
-            hideAllPages();
-            profilePage.classList.remove('hidden');
-            setActiveNav('home');
-        }
-        // Show Quiz Page
-        function showQuizPage() {
-            hideAllPages();
-            quizPage.classList.remove('hidden');
-            setActiveNav('home');
-            // Reset quiz completion state
-            quizCompleted.classList.add('hidden');
-            quizContent.classList.remove('hidden');
-            // Update progress
-            updateProgress();
-        }
-        // Show Courses Page with Recommendation
-        function showCoursesPage(recommendedCategory = null) {
-            hideAllPages();
-            coursesPage.classList.remove('hidden');
-            setActiveNav('courses');
-            // Reset all recommendations
-            courseArts.classList.remove('top-recommendation');
-            courseScience.classList.remove('top-recommendation');
-            courseCommerce.classList.remove('top-recommendation');
-            document.querySelectorAll('.top-recommendation-badge').forEach(badge => {
-                badge.classList.add('hidden');
+            quizPage.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'submit-quiz') {
+                    submitQuiz();
+                }
             });
-            // Apply recommendation if provided
-            if (recommendedCategory) {
-                let recommendedElement;
-                switch(recommendedCategory) {
-                    case 'arts':
-                        recommendedElement = courseArts;
-                        break;
-                    case 'science':
-                        recommendedElement = courseScience;
-                        break;
-                    case 'commerce':
-                        recommendedElement = courseCommerce;
-                        break;
-                }
-                if (recommendedElement) {
-                    recommendedElement.classList.add('top-recommendation');
-                    recommendedElement.querySelector('.top-recommendation-badge').classList.remove('hidden');
-                }
-            }
         }
-        // Show Course Details Page
-        function showCourseDetails(id) {
-            hideAllPages();
-            courseDetailsPage.classList.remove('hidden');
-            setActiveNav('courses');
-            // Update course details based on ID
-            const courseName = document.getElementById('course-name');
-            const courseDescription = document.getElementById('course-description');
-            const courseStream = document.getElementById('course-stream');
-            const courseDuration = document.getElementById('course-duration');
-            const courseColleges = document.getElementById('course-colleges');
-            const courseImage = document.getElementById('course-image');
-            switch(id) {
-                case 1:
-                    courseName.textContent = "Bachelor of Arts (B.A.)";
-                    courseDescription.textContent = "Explore human culture, society, and expression through literature, history, philosophy, and languages.";
-                    courseStream.textContent = "Arts";
-                    courseStream.className = "px-6 py-3 rounded-full text-lg font-bold text-white bg-gradient-to-r from-purple-500 to-pink-600";
-                    courseDuration.textContent = "3 Years";
-                    courseColleges.textContent = "4";
-                    courseImage.src = "https://placehold.co/1200x400/4F46E5/FFFFFF?text=B.A.+Program";
-                    break;
-                case 2:
-                    courseName.textContent = "Bachelor of Science (B.Sc.)";
-                    courseDescription.textContent = "Develop scientific knowledge and research skills in physics, chemistry, biology, mathematics, or computer science.";
-                    courseStream.textContent = "Science";
-                    courseStream.className = "px-6 py-3 rounded-full text-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-600";
-                    courseDuration.textContent = "3 Years";
-                    courseColleges.textContent = "4";
-                    courseImage.src = "https://placehold.co/1200x400/059669/FFFFFF?text=B.Sc.+Program";
-                    break;
-                case 3:
-                    courseName.textContent = "Bachelor of Commerce (B.Com.)";
-                    courseDescription.textContent = "Master the principles of accounting, finance, business management, and economics for corporate and entrepreneurial careers.";
-                    courseStream.textContent = "Commerce";
-                    courseStream.className = "px-6 py-3 rounded-full text-lg font-bold text-white bg-gradient-to-r from-orange-500 to-red-600";
-                    courseDuration.textContent = "3 Years";
-                    courseColleges.textContent = "4";
-                    courseImage.src = "https://placehold.co/1200x400/DC2626/FFFFFF?text=B.Com.+Program";
-                    break;
-            }
-        }
-        // Show Resources Page
-        function showResourcesPage() {
-            hideAllPages();
-            resourcesPage.classList.remove('hidden');
-            setActiveNav('resources');
-        }
-        // Show Colleges Page
-        function showCollegesPage() {
-            hideAllPages();
-            collegesPage.classList.remove('hidden');
-            setActiveNav('colleges');
-        }
-        // Show College Details
-        function showCollegeDetails(id) {
-            // For demo purposes, show course details page with college info
-            showCourseDetails(1);
-        }
-        // Hide all pages
-        function hideAllPages() {
-            homePage.classList.add('hidden');
-            profilePage.classList.add('hidden');
-            quizPage.classList.add('hidden');
-            coursesPage.classList.add('hidden');
-            courseDetailsPage.classList.add('hidden');
-            resourcesPage.classList.add('hidden');
-            collegesPage.classList.add('hidden');
-        }
-        // Set active navigation
-        function setActiveNav(active) {
-            // Remove active class from all nav items
-            navHome.classList.remove('active');
-            navCourses.classList.remove('active');
-            navColleges.classList.remove('active');
-            navResources.classList.remove('active');
-            // Add active class to current nav item
-            switch(active) {
-                case 'home':
-                    navHome.classList.add('active');
-                    break;
-                case 'courses':
-                    navCourses.classList.add('active');
-                    break;
-                case 'colleges':
-                    navColleges.classList.add('active');
-                    break;
-                case 'resources':
-                    navResources.classList.add('active');
-                    break;
-            }
-        }
-        // Handle Profile Form Submission
+
         function handleProfileSubmit(e) {
             e.preventDefault();
-            // Validate form
             if (validateForm()) {
-                // Show quiz page
+                userProfile = {
+                    name: nameInput.value.trim(),
+                    age: parseInt(ageInput.value),
+                    gender: genderInput.value,
+                    education: educationInput.value,
+                    stream: educationInput.value === 'class12' ? streamInput.value : null
+                };
+                userStream = userProfile.stream;
                 showQuizPage();
             }
         }
-        // Validate Form
-        function validateForm() {
-            let isValid = true;
-            // Validate name
-            if (!validateName()) isValid = false;
-            // Validate age
-            if (!validateAge()) isValid = false;
-            // Validate gender
-            if (!validateGender()) isValid = false;
-            // Validate education
-            if (!validateEducation()) isValid = false;
-            // Validate stream if education is class12
-            if (educationInput.value === 'class12' && !validateStream()) isValid = false;
-            return isValid;
+
+        function showQuizPage() {
+            hideAllPages();
+            quizPage.classList.remove('hidden');
+            quizCompleted.classList.add('hidden');
+            quizContent.classList.remove('hidden');
+            const edu = userProfile.education;
+            const questions = quizQuestions[edu] || quizQuestions.class12;
+            let html = '';
+            questions.forEach(q => {
+                html += `
+                <div class="bg-gradient-to-r from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 quiz-question">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold mr-3">${q.id}</div>
+                        <h5 class="text-xl font-bold text-gray-900">${q.question}</h5>
+                    </div>
+                    <div class="space-y-4">
+                        ${q.options.map(opt => `
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-indigo-50 cursor-pointer transition-all duration-300 group">
+                            <input type="radio" name="question${q.id}" class="h-5 w-5 text-primary focus:ring-primary mr-4" value="${opt.value}" data-category="${opt.category}" required>
+                            <span class="text-gray-700 text-lg group-hover:text-primary">${opt.text}</span>
+                        </label>
+                        `).join('')}
+                    </div>
+                </div>
+                `;
+            });
+            html += `
+                <div class="pt-6">
+                    <button id="submit-quiz" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 px-8 rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center space-x-3">
+                        <span>Submit Quiz & Get Recommendations</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+            quizContent.innerHTML = html;
+            const radios = quizContent.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => r.addEventListener('change', updateProgress));
+            updateProgress();
         }
-        // Validate Name
-        function validateName() {
-            const name = nameInput.value.trim();
-            if (name.length < 2) {
-                nameError.textContent = "Name must be at least 2 characters";
-                nameError.classList.remove('hidden');
-                return false;
-            } else {
-                nameError.classList.add('hidden');
-                return true;
-            }
-        }
-        // Validate Age
-        function validateAge() {
-            const age = parseInt(ageInput.value);
-            if (isNaN(age) || age < 13 || age > 30) {
-                ageError.textContent = "Age must be between 13 and 30";
-                ageError.classList.remove('hidden');
-                return false;
-            } else {
-                ageError.classList.add('hidden');
-                return true;
-            }
-        }
-        // Validate Gender
-        function validateGender() {
-            if (genderInput.value === "") {
-                genderError.textContent = "Please select your gender";
-                genderError.classList.remove('hidden');
-                return false;
-            } else {
-                genderError.classList.add('hidden');
-                return true;
-            }
-        }
-        // Validate Education
-        function validateEducation() {
-            if (educationInput.value === "") {
-                educationError.textContent = "Please select your education level";
-                educationError.classList.remove('hidden');
-                return false;
-            } else {
-                educationError.classList.add('hidden');
-                return true;
-            }
-        }
-        // Validate Stream
-        function validateStream() {
-            if (educationInput.value === 'class12' && streamInput.value === "") {
-                streamError.textContent = "Please select your 12th standard stream";
-                streamError.classList.remove('hidden');
-                return false;
-            } else {
-                streamError.classList.add('hidden');
-                return true;
-            }
-        }
-        // Update Progress
-        function updateProgress() {
-            const totalQuestions = 10;
-            let answeredQuestions = 0;
-            for (let i = 1; i <= totalQuestions; i++) {
-                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
-                if (selectedOption) {
-                    answeredQuestions++;
-                    userAnswers[i] = {
-                        value: selectedOption.value,
-                        category: selectedOption.dataset.category
-                    };
+
+        function processQuizResults() {
+            const categoryCount = { arts: 0, science: 0, commerce: 0 };
+            const subInterests = { tech: 0, medical: 0, business: 0, creative: 0, social: 0 };
+
+            for (const answer of Object.values(userAnswers)) {
+                if (answer && answer.category) {
+                    categoryCount[answer.category]++;
+                }
+                const val = answer?.value;
+                if (val) {
+                    if (['tech','coding','computer','math','it','bca','engineering','software_dev','laptop_code','programming','join_it'].some(k => val.includes(k) || val === k)) {
+                        subInterests.tech++;
+                    }
+                    if (['biology','medical','doctor','health','nursing','zoology','botany','biology_lab','hospital_lab','help_patients','do_msc'].some(k => val.includes(k) || val === k)) {
+                        subInterests.medical++;
+                    }
+                    if (['business','ca','finance','entrepreneur','bba','management','accounting','stock_market','calculator_excel','become_ca','do_mba'].some(k => val.includes(k) || val === k)) {
+                        subInterests.business++;
+                    }
+                    if (['writing','creative','art','design','journalism','media','literature','writing_stories','pen_notebook','express_creativity','ba_journalism'].some(k => val.includes(k) || val === k)) {
+                        subInterests.creative++;
+                    }
+                    if (['social','people','law','psychology','politics','sociology','history','psychologist','civil_servant','prepare_upsc','ba_psychology'].some(k => val.includes(k) || val === k)) {
+                        subInterests.social++;
+                    }
                 }
             }
-            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-            progressText.textContent = `${answeredQuestions}/${totalQuestions} questions answered`;
+
+            let maxCategory = 'arts';
+            if (categoryCount.science > categoryCount[maxCategory]) maxCategory = 'science';
+            if (categoryCount.commerce > categoryCount[maxCategory]) maxCategory = 'commerce';
+
+            if (!userProfile.stream && userProfile.education === 'class12') {
+                userProfile.stream = maxCategory;
+            }
+            userStream = userProfile.stream || maxCategory;
+            const eduLevel = userProfile.education;
+
+            quizContent.classList.add('hidden');
+            quizCompleted.classList.remove('hidden');
+            quizCompleted.innerHTML = '';
+
+            if (eduLevel === 'class10') {
+                const streamNames = { arts: 'Arts/Humanities', science: 'Science', commerce: 'Commerce' };
+                const streamText = streamNames[maxCategory] || 'General';
+
+                const streamCard = document.createElement('div');
+                streamCard.className = 'bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-indigo-100 mb-8 text-center';
+                streamCard.innerHTML = `
+                    <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-primary mb-3">Recommended 11th Stream</h3>
+                    <p class="text-xl text-gray-700 mb-6">Based on your interests, we recommend:</p>
+                    <div class="inline-block bg-white text-indigo-700 px-6 py-3 rounded-full font-bold text-2xl shadow-md border-2 border-primary">
+                        ${streamText}
+                    </div>
+                    <p class="text-gray-600 mt-4">This stream will prepare you for the best career options after 12th.</p>
+                `;
+
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'flex flex-col sm:flex-row gap-4 justify-center mt-8';
+                buttonsDiv.innerHTML = `
+                    <button id="view-junior-colleges" class="bg-gradient-to-r from-primary to-secondary text-white py-3 px-8 rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-xl">
+                        View Junior Colleges (11th)
+                    </button>
+                    <button id="retake-quiz" class="bg-gray-200 text-gray-800 py-3 px-8 rounded-2xl font-bold text-lg hover:bg-gray-300 transition-all">
+                        Retake Quiz
+                    </button>
+                `;
+
+                quizCompleted.appendChild(streamCard);
+                quizCompleted.appendChild(buttonsDiv);
+
+                document.getElementById('view-junior-colleges').onclick = () => showCollegesPage(maxCategory, 'class10');
+                document.getElementById('retake-quiz').onclick = () => {
+                    userAnswers = {};
+                    showQuizPage();
+                };
+
+            } else if (eduLevel === 'class12') {
+                let recommendedCourses = [];
+                if (maxCategory === 'science') {
+                    if (subInterests.tech >= subInterests.medical) {
+                        recommendedCourses = ["BCA", "B.Sc Computer Science"];
+                    } else {
+                        recommendedCourses = ["B.Sc Medical"];
+                    }
+                } else if (maxCategory === 'commerce') {
+                    if (subInterests.business >= 2) {
+                        recommendedCourses = ["B.Com (Hons)", "BBA"];
+                    } else {
+                        recommendedCourses = ["B.Com (Hons)"];
+                    }
+                } else if (maxCategory === 'arts') {
+                    if (subInterests.creative >= subInterests.social) {
+                        recommendedCourses = ["B.A. Journalism"];
+                    } else {
+                        recommendedCourses = ["B.A. Psychology"];
+                    }
+                }
+
+                currentRecommendedCourses = recommendedCourses;
+                showRecommendedCourses(recommendedCourses);
+            }
         }
-        // Submit Quiz
+
+        function showRecommendedCourses(courses) {
+            let html = '';
+            courses.forEach(courseName => {
+                const course = courseData[courseName];
+                html += `
+                    <div class="bg-white rounded-3xl shadow-xl card-hover">
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold text-gray-900 mb-4">${courseName}</h4>
+                            <p class="text-gray-600 mb-6">${course.description}</p>
+                            <div class="mb-6">
+                                <h5 class="font-bold text-gray-900 mb-3 text-lg">Sample Syllabus:</h5>
+                                <div class="flex flex-wrap gap-1">
+                                    ${course.syllabus.map(item => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${item}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="text-lg text-gray-500 font-medium">Duration: ${course.duration}</span>
+                                <span class="text-lg font-bold text-green-600">Colleges: ${course.colleges}+</span>
+                            </div>
+                            <div class="pt-4 border-t border-gray-100">
+                                <button onclick="showCourseDetail('${courseName}')" class="w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                                    View Course Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            recommendedCoursesList.innerHTML = html;
+            hideAllPages();
+            recommendedCoursesPage.classList.remove('hidden');
+        }
+
+        function showCollegesPage(stream = null, education = null) {
+            hideAllPages();
+            collegesPage.classList.remove('hidden');
+            const eduLevel = education || (userProfile ? userProfile.education : null);
+            const userStr = stream || (userProfile ? userProfile.stream : null);
+            const heading = document.getElementById('colleges-heading');
+            const subheading = document.getElementById('colleges-subheading');
+            let collegesToShow = [];
+
+            if (eduLevel === 'class10') {
+                heading.textContent = "Junior Colleges in J&K (After 10th)";
+                subheading.textContent = "These colleges offer 11th and 12th standard with your selected stream.";
+                if (userStr && collegeDatabase.junior[userStr]) {
+                    collegesToShow = collegeDatabase.junior[userStr];
+                } else {
+                    Object.values(collegeDatabase.junior).forEach(list => collegesToShow.push(...list));
+                }
+            } else {
+                heading.textContent = "Degree Colleges in J&K (After 12th)";
+                subheading.textContent = "Bachelor's degree programs in your recommended stream.";
+                if (userStr && collegeDatabase.degree[userStr]) {
+                    collegesToShow = collegeDatabase.degree[userStr];
+                } else {
+                    Object.values(collegeDatabase.degree).forEach(list => collegesToShow.push(...list));
+                }
+            }
+
+            collegesGrid.innerHTML = '';
+            collegesToShow.forEach(college => {
+                const isJunior = eduLevel === 'class10';
+                const streamLabel = userStr || 'general';
+                const bgColor = streamLabel === 'science' ? 'from-green-500 to-emerald-600' :
+                               streamLabel === 'commerce' ? 'from-orange-500 to-red-600' : 'from-purple-500 to-pink-600';
+                const items = isJunior ? college.subjects : college.courses;
+                const itemLabel = isJunior ? 'Subjects' : 'Courses';
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl shadow-xl card-hover";
+                card.innerHTML = `
+                    <div class="relative overflow-hidden">
+                        <img src="https://placehold.co/600x400/8B5CF6/FFFFFF?text=${encodeURIComponent(college.name)}" alt="${college.name}" class="w-full h-64 object-cover">
+                        <div class="absolute top-6 right-6">
+                            <span class="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r ${bgColor}">
+                                ${streamLabel.charAt(0).toUpperCase() + streamLabel.slice(1)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">${college.name}</h4>
+                        <p class="text-gray-600 mb-2">${college.location}</p>
+                        <div class="mb-3">
+                            <h5 class="font-bold text-gray-900 mb-2 text-lg">${itemLabel} Offered:</h5>
+                            <div class="flex flex-wrap gap-1">
+                                ${items.map(item => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${item}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="text-gray-500">Cutoff: ${college.cutoff}</span>
+                            <span class="text-green-600 font-bold">${isJunior ? '11th–12th' : 'Degree'}</span>
+                        </div>
+                        <button class="mt-4 w-full bg-gradient-to-r from-primary to-indigo-600 text-white py-3 px-4 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg">
+                            ${isJunior ? 'View Admission (11th)' : 'Check Admission'}
+                        </button>
+                    </div>
+                `;
+                collegesGrid.appendChild(card);
+            });
+        }
+
+        function showAllCoursesPage() {
+            hideAllPages();
+            allCoursesPage.classList.remove('hidden');
+        }
+
+        function showCourseDetail(courseName) {
+            const course = courseData[courseName];
+            if (!course) return;
+
+            const content = `
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">${courseName}</h2>
+                    <p class="text-gray-600 text-lg mb-6">${course.description}</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-blue-50 p-6 rounded-2xl">
+                            <h3 class="font-bold text-lg text-primary mb-3">Key Details</h3>
+                            <p><strong>Duration:</strong> ${course.duration}</p>
+                            <p><strong>Colleges Offering:</strong> ${course.colleges}+</p>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-2xl">
+                            <h3 class="font-bold text-lg text-accent mb-3">Career Paths</h3>
+                            <ul class="list-disc pl-5 text-gray-700">
+                                ${course.careerPaths.map(cp => `<li>${cp}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Sample Syllabus</h3>
+                        <div class="flex flex-wrap gap-2">
+                            ${course.syllabus.map(sub => `<span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">${sub}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button id="download-pdf-btn" class="bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-8 rounded-2xl font-bold flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i> Download Course Info (PDF)
+                        </button>
+                        <button id="view-colleges-from-course" class="bg-gradient-to-r from-primary to-secondary text-white py-3 px-8 rounded-2xl font-bold">
+                            View Colleges
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('course-detail-content').innerHTML = content;
+            hideAllPages();
+            courseDetailPage.classList.remove('hidden');
+
+            document.getElementById('download-pdf-btn').onclick = () => downloadCoursePDF(courseName, course);
+            document.getElementById('view-colleges-from-course').onclick = () => showCollegesPage(course.stream, 'class12');
+        }
+
+        function downloadCoursePDF(name, course) {
+            const doc = new jsPDF();
+            doc.setFontSize(20);
+            doc.text("COURSE2CAREER - Course Guide", 14, 20);
+            doc.setFontSize(16);
+            doc.text(name, 14, 35);
+            doc.setFontSize(12);
+            let y = 45;
+            doc.text(`Duration: ${course.duration}`, 14, y); y += 8;
+            doc.text(`Colleges: ${course.colleges}+`, 14, y); y += 12;
+            doc.text("Description:", 14, y); y += 6;
+            const descLines = doc.splitTextToSize(course.description, 180);
+            doc.text(descLines, 14, y); y += descLines.length * 7 + 10;
+            doc.text("Career Paths:", 14, y); y += 6;
+            course.careerPaths.forEach(cp => {
+                doc.text(`• ${cp}`, 14, y); y += 7;
+            });
+            y += 10;
+            doc.text("Sample Syllabus:", 14, y); y += 6;
+            course.syllabus.forEach(sub => {
+                doc.text(`• ${sub}`, 14, y); y += 7;
+            });
+            doc.save(`${name.replace(/[^a-z0-9]/gi, '_')}_guide.pdf`);
+        }
+
+        function showQuizResults() {
+            hideAllPages();
+            quizPage.classList.remove('hidden');
+            quizCompleted.classList.remove('hidden');
+        }
+
+        // Utility Functions
+        function showHomePage() {
+            hideAllPages();
+            homePage.classList.remove('hidden');
+        }
+        function showProfilePage() {
+            hideAllPages();
+            profilePage.classList.remove('hidden');
+        }
+        function showResourcesPage() {
+            hideAllPages();
+            resourcesPage.classList.remove('hidden');
+        }
+        function hideAllPages() {
+            [homePage, profilePage, quizPage, recommendedCoursesPage, allCoursesPage, courseDetailPage, resourcesPage, collegesPage].forEach(p => p.classList.add('hidden'));
+        }
+        function validateForm() {
+            return validateName() && validateAge() && validateGender() && validateEducation() &&
+                   (educationInput.value !== 'class12' || validateStream());
+        }
+        function validateName() {
+            const valid = nameInput.value.trim().length >= 2;
+            nameError.classList.toggle('hidden', valid);
+            return valid;
+        }
+        function validateAge() {
+            const age = parseInt(ageInput.value);
+            const valid = !isNaN(age) && age >= 13 && age <= 30;
+            ageError.classList.toggle('hidden', valid);
+            return valid;
+        }
+        function validateGender() {
+            const valid = genderInput.value !== "";
+            genderError.classList.toggle('hidden', valid);
+            return valid;
+        }
+        function validateEducation() {
+            const valid = educationInput.value !== "";
+            educationError.classList.toggle('hidden', valid);
+            return valid;
+        }
+        function validateStream() {
+            const valid = educationInput.value !== 'class12' || streamInput.value !== "";
+            streamError.classList.toggle('hidden', valid);
+            return valid;
+        }
+        function updateProgress() {
+            const total = 10;
+            let answered = 0;
+            for (let i = 1; i <= total; i++) {
+                const selected = document.querySelector(`input[name="question${i}"]:checked`);
+                if (selected) {
+                    answered++;
+                    userAnswers[i] = { value: selected.value, category: selected.dataset.category };
+                }
+            }
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressText.textContent = `${answered}/${total} questions answered`;
+        }
         function submitQuiz() {
-            // Check if all questions are answered
-            const totalQuestions = 10;
+            const total = 10;
             let allAnswered = true;
-            for (let i = 1; i <= totalQuestions; i++) {
-                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
-                if (!selectedOption) {
+            for (let i = 1; i <= total; i++) {
+                if (!document.querySelector(`input[name="question${i}"]:checked`)) {
                     allAnswered = false;
                     break;
                 }
@@ -1831,101 +1533,20 @@
                 alert("Please answer all questions before submitting.");
                 return;
             }
-            // Show completion screen
-            quizContent.classList.add('hidden');
-            quizCompleted.classList.remove('hidden');
-            // Process results
             processQuizResults();
         }
-        // Process Quiz Results - Advanced Logic
-        function processQuizResults() {
-            // Analyze user answers
-            const categoryCount = {
-                arts: 0,
-                science: 0,
-                commerce: 0
-            };
-            for (const answer of Object.values(userAnswers)) {
-                if (answer && answer.category) {
-                    categoryCount[answer.category]++;
-                }
-            }
-            let maxCategory = 'arts';
-            let maxCount = categoryCount.arts;
-            if (categoryCount.science > maxCount) {
-                maxCategory = 'science';
-                maxCount = categoryCount.science;
-            }
-            if (categoryCount.commerce > maxCount) {
-                maxCategory = 'commerce';
-                maxCount = categoryCount.commerce;
-            }
-            // Show personalized summary before courses
-            const summaryDiv = document.createElement('div');
-            summaryDiv.className = 'bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-indigo-100 mb-8';
-            let streamText = '';
-            if (maxCategory === 'arts') streamText = 'Arts/Humanities';
-            if (maxCategory === 'science') streamText = 'Science';
-            if (maxCategory === 'commerce') streamText = 'Commerce';
-            summaryDiv.innerHTML = `
-                <h3 class="text-2xl font-bold text-primary mb-4">Your Recommended Stream: <span class="text-indigo-700">${streamText}</span></h3>
-                <p class="text-gray-700 mb-4">Based on your answers, you show strong interest and aptitude in <b>${streamText}</b> subjects and careers.</p>
-                <ul class="list-disc ml-6 text-gray-700 mb-4">
-                    <li>Explore courses and careers in <b>${streamText}</b> below.</li>
-                    <li>Review the career guidance questions for your stream to reflect on your next steps.</li>
-                </ul>
-                <button id="continue-to-courses" class="bg-gradient-to-r from-primary to-secondary text-white py-3 px-8 rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl mt-4">Continue to Recommendations</button>
-            `;
-            quizCompleted.innerHTML = '';
-            quizCompleted.appendChild(summaryDiv);
-            document.getElementById('quiz-content').classList.add('hidden');
-            quizCompleted.classList.remove('hidden');
-            document.getElementById('continue-to-courses').onclick = function() {
-                showCoursesPage(maxCategory);
-            };
-        }
-        // Toggle Career Outcomes
-        function toggleCareerOutcomes() {
-            if (careerOutcomes.classList.contains('hidden')) {
-                careerOutcomes.classList.remove('hidden');
-                toggleCareerOutcomesBtn.innerHTML = '<span>Hide Career Outcomes</span> <i class="fas fa-chevron-up"></i>';
-            } else {
-                careerOutcomes.classList.add('hidden');
-                toggleCareerOutcomesBtn.innerHTML = '<span>Show Career Outcomes</span> <i class="fas fa-chevron-down"></i>';
-            }
-        }
-        // Toggle Mobile Menu
         function toggleMobileMenu() {
             mobileMenu.classList.toggle('open');
         }
-        // Reset Assessment
         function resetAssessment() {
-            // Reset form
             profileForm.reset();
-            // Hide error messages
-            nameError.classList.add('hidden');
-            ageError.classList.add('hidden');
-            genderError.classList.add('hidden');
-            educationError.classList.add('hidden');
-            streamError.classList.add('hidden');
-            // Hide stream container
+            [nameError, ageError, genderError, educationError, streamError].forEach(e => e.classList.add('hidden'));
             streamContainer.classList.add('hidden');
-            // Reset quiz
-            quizContent.classList.remove('hidden');
-            quizCompleted.classList.add('hidden');
-            // Clear all radio selections
-            const allRadioButtons = document.querySelectorAll('input[type="radio"][name^="question"]');
-            allRadioButtons.forEach(radio => {
-                radio.checked = false;
-            });
-            // Reset progress
-            progressBar.style.width = '0%';
-            progressText.textContent = '0/10 questions answered';
             userAnswers = {};
-            // Show home page
+            userStream = null;
             showHomePage();
         }
-        // Initialize the app
+
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
